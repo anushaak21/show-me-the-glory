@@ -13,14 +13,16 @@ import { z } from "zod";
 const emailSchema = z.string().email("Please enter a valid email address");
 const passwordSchema = z.string().min(6, "Password must be at least 6 characters");
 const nameSchema = z.string().min(2, "Name must be at least 2 characters");
+const confirmPasswordSchema = z.string();
 
 export default function Auth() {
-  const [isLogin, setIsLogin] = useState(true);
   const [isResetPassword, setIsResetPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [fullName, setFullName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -46,21 +48,21 @@ export default function Auth() {
       }
     }
 
-    try {
-      passwordSchema.parse(password);
-    } catch (error) {
-      if (error instanceof z.ZodError) {
-        newErrors.password = error.issues[0].message;
-      }
-    }
-
-    if (!isLogin) {
+    if (!isResetPassword) {
       try {
-        nameSchema.parse(fullName);
+        passwordSchema.parse(password);
       } catch (error) {
         if (error instanceof z.ZodError) {
-          newErrors.fullName = error.issues[0].message;
+          newErrors.password = error.issues[0].message;
         }
+      }
+
+      if (password !== confirmPassword) {
+        newErrors.confirmPassword = "Passwords do not match";
+      }
+
+      if (confirmPassword.length === 0) {
+        newErrors.confirmPassword = "Please confirm your password";
       }
     }
 
@@ -102,7 +104,6 @@ export default function Auth() {
             description: "Check your email for a password reset link.",
           });
           setIsResetPassword(false);
-          setIsLogin(true);
         }
       } catch (error) {
         toast({
@@ -124,52 +125,40 @@ export default function Auth() {
     setErrors({});
 
     try {
-      if (isLogin) {
-        const { error } = await signIn(email, password);
-        if (error) {
-          if (error.message.includes("Invalid login credentials")) {
+      // First try to sign in with existing credentials
+      const signInResult = await signIn(email, password);
+      
+      if (signInResult.error) {
+        // If sign in fails, try to create a new account
+        console.log("Sign in failed, attempting to create new account");
+        const signUpResult = await signUp(email, password, fullName || email.split('@')[0]);
+        
+        if (signUpResult.error) {
+          if (signUpResult.error.message.includes("User already registered")) {
             toast({
               title: "Login Failed",
-              description: "Invalid email or password. Please try again.",
+              description: "Account exists but password is incorrect. Try using 'Forgot Password' or check your password.",
               variant: "destructive",
             });
           } else {
             toast({
-              title: "Login Failed",
-              description: error.message,
-              variant: "destructive",
-            });
-          }
-        } else {
-          toast({
-            title: "Welcome back!",
-            description: "You have successfully logged in.",
-          });
-          navigate("/");
-        }
-      } else {
-        const { error } = await signUp(email, password, fullName);
-        if (error) {
-          if (error.message.includes("User already registered")) {
-            toast({
-              title: "Account Exists",
-              description: "An account with this email already exists. Try logging in instead.",
-              variant: "destructive",
-            });
-          } else {
-            toast({
-              title: "Sign Up Failed",
-              description: error.message,
+              title: "Authentication Failed",
+              description: signUpResult.error.message,
               variant: "destructive",
             });
           }
         } else {
           toast({
             title: "Account Created!",
-            description: "Please check your email to verify your account.",
+            description: "Your account has been created. Please check your email to verify.",
           });
-          setIsLogin(true);
         }
+      } else {
+        toast({
+          title: "Welcome back!",
+          description: "You have successfully logged in.",
+        });
+        navigate("/");
       }
     } catch (error) {
       toast({
@@ -204,36 +193,17 @@ export default function Auth() {
         <Card className="bg-card/95 backdrop-blur border-border shadow-warm">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center text-card-foreground">
-              {isResetPassword ? "Reset Password" : isLogin ? "Welcome Back" : "Create Account"}
+              {isResetPassword ? "Reset Password" : "Login / Create Account"}
             </CardTitle>
             <p className="text-center text-muted-foreground">
               {isResetPassword 
                 ? "Enter your email to receive a password reset link"
-                : isLogin 
-                ? "Sign in to your account to start ordering" 
-                : "Join FoodieDelights to enjoy delicious meals"
+                : "Enter your email and create a password to login or sign up"
               }
             </p>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && !isResetPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="fullName">Full Name</Label>
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className={errors.fullName ? "border-destructive" : ""}
-                  />
-                  {errors.fullName && (
-                    <p className="text-sm text-destructive">{errors.fullName}</p>
-                  )}
-                </div>
-              )}
-
               <div className="space-y-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -250,53 +220,83 @@ export default function Auth() {
               </div>
 
               {!isResetPassword && (
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Input
-                      id="password"
-                      type={showPassword ? "text" : "password"}
-                      placeholder="Enter your password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className={errors.password ? "border-destructive pr-10" : "pr-10"}
-                    />
+                <>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Create Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="password"
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create your password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className={errors.password ? "border-destructive pr-10" : "pr-10"}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowPassword(!showPassword)}
+                      >
+                        {showPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                    {errors.password && (
+                      <p className="text-sm text-destructive">{errors.password}</p>
+                    )}
+                    {!errors.password && (
+                      <p className="text-xs text-muted-foreground">
+                        Password must be at least 6 characters long
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <div className="relative">
+                      <Input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? "text" : "password"}
+                        placeholder="Confirm your password"
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className={errors.confirmPassword ? "border-destructive pr-10" : "pr-10"}
+                      />
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="h-4 w-4 text-muted-foreground" />
+                        ) : (
+                          <Eye className="h-4 w-4 text-muted-foreground" />
+                        )}
+                      </Button>
+                    </div>
+                    {errors.confirmPassword && (
+                      <p className="text-sm text-destructive">{errors.confirmPassword}</p>
+                    )}
+                  </div>
+
+                  <div className="flex justify-center">
                     <Button
                       type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                      onClick={() => setShowPassword(!showPassword)}
+                      variant="link"
+                      onClick={() => setIsResetPassword(true)}
+                      className="px-0 text-sm text-primary hover:text-primary/80"
                     >
-                      {showPassword ? (
-                        <EyeOff className="h-4 w-4 text-muted-foreground" />
-                      ) : (
-                        <Eye className="h-4 w-4 text-muted-foreground" />
-                      )}
+                      Forgot password?
                     </Button>
                   </div>
-                  {errors.password && (
-                    <p className="text-sm text-destructive">{errors.password}</p>
-                  )}
-                  {!isLogin && !errors.password && (
-                    <p className="text-xs text-muted-foreground">
-                      Password must be at least 6 characters long
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {isLogin && !isResetPassword && (
-                <div className="flex justify-end">
-                  <Button
-                    type="button"
-                    variant="link"
-                    onClick={() => setIsResetPassword(true)}
-                    className="px-0 text-sm text-primary hover:text-primary/80"
-                  >
-                    Forgot password?
-                  </Button>
-                </div>
+                </>
               )}
 
               <Button
@@ -306,15 +306,15 @@ export default function Auth() {
                 disabled={loading}
               >
                 {loading 
-                  ? (isResetPassword ? "Sending reset link..." : isLogin ? "Signing in..." : "Creating account...") 
-                  : (isResetPassword ? "Send Reset Link" : isLogin ? "Sign In" : "Sign Up")
+                  ? (isResetPassword ? "Sending reset link..." : "Processing...") 
+                  : (isResetPassword ? "Send Reset Link" : "Sign In")
                 }
               </Button>
 
               <Separator />
 
               <div className="text-center">
-                {isResetPassword ? (
+                {isResetPassword && (
                   <Button
                     type="button"
                     variant="link"
@@ -322,31 +322,13 @@ export default function Auth() {
                       setIsResetPassword(false);
                       setErrors({});
                       setEmail("");
+                      setPassword("");
+                      setConfirmPassword("");
                     }}
                     className="text-primary hover:text-primary/80"
                   >
                     Back to sign in
                   </Button>
-                ) : (
-                  <>
-                    <p className="text-sm text-muted-foreground">
-                      {isLogin ? "Don't have an account?" : "Already have an account?"}
-                    </p>
-                    <Button
-                      type="button"
-                      variant="link"
-                      onClick={() => {
-                        setIsLogin(!isLogin);
-                        setErrors({});
-                        setEmail("");
-                        setPassword("");
-                        setFullName("");
-                      }}
-                      className="text-primary hover:text-primary/80"
-                    >
-                      {isLogin ? "Sign up here" : "Sign in here"}
-                    </Button>
-                  </>
                 )}
               </div>
             </form>
