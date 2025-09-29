@@ -16,6 +16,7 @@ const nameSchema = z.string().min(2, "Name must be at least 2 characters");
 
 export default function Auth() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isResetPassword, setIsResetPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -23,7 +24,7 @@ export default function Auth() {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
-  const { signUp, signIn, user } = useAuth();
+  const { signUp, signIn, user, resetPassword } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -69,6 +70,51 @@ export default function Auth() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isResetPassword) {
+      if (!email) {
+        setErrors({ email: "Please enter your email address" });
+        return;
+      }
+      try {
+        emailSchema.parse(email);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          setErrors({ email: error.issues[0].message });
+          return;
+        }
+      }
+
+      setLoading(true);
+      setErrors({});
+
+      try {
+        const { error } = await resetPassword(email);
+        if (error) {
+          toast({
+            title: "Reset Failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Reset Link Sent!",
+            description: "Check your email for a password reset link.",
+          });
+          setIsResetPassword(false);
+          setIsLogin(true);
+        }
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "An unexpected error occurred. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+      return;
+    }
     
     if (!validateForm()) {
       return;
@@ -158,10 +204,12 @@ export default function Auth() {
         <Card className="bg-card/95 backdrop-blur border-border shadow-warm">
           <CardHeader className="space-y-1">
             <CardTitle className="text-2xl text-center text-card-foreground">
-              {isLogin ? "Welcome Back" : "Create Account"}
+              {isResetPassword ? "Reset Password" : isLogin ? "Welcome Back" : "Create Account"}
             </CardTitle>
             <p className="text-center text-muted-foreground">
-              {isLogin 
+              {isResetPassword 
+                ? "Enter your email to receive a password reset link"
+                : isLogin 
                 ? "Sign in to your account to start ordering" 
                 : "Join FoodieDelights to enjoy delicious meals"
               }
@@ -169,7 +217,7 @@ export default function Auth() {
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
-              {!isLogin && (
+              {!isLogin && !isResetPassword && (
                 <div className="space-y-2">
                   <Label htmlFor="fullName">Full Name</Label>
                   <Input
@@ -201,40 +249,55 @@ export default function Auth() {
                 )}
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className={errors.password ? "border-destructive pr-10" : "pr-10"}
-                  />
+              {!isResetPassword && (
+                <div className="space-y-2">
+                  <Label htmlFor="password">Password</Label>
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      type={showPassword ? "text" : "password"}
+                      placeholder="Enter your password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      className={errors.password ? "border-destructive pr-10" : "pr-10"}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                      onClick={() => setShowPassword(!showPassword)}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="h-4 w-4 text-muted-foreground" />
+                      ) : (
+                        <Eye className="h-4 w-4 text-muted-foreground" />
+                      )}
+                    </Button>
+                  </div>
+                  {errors.password && (
+                    <p className="text-sm text-destructive">{errors.password}</p>
+                  )}
+                  {!isLogin && !errors.password && (
+                    <p className="text-xs text-muted-foreground">
+                      Password must be at least 6 characters long
+                    </p>
+                  )}
+                </div>
+              )}
+
+              {isLogin && !isResetPassword && (
+                <div className="flex justify-end">
                   <Button
                     type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
+                    variant="link"
+                    onClick={() => setIsResetPassword(true)}
+                    className="px-0 text-sm text-primary hover:text-primary/80"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
+                    Forgot password?
                   </Button>
                 </div>
-                {errors.password && (
-                  <p className="text-sm text-destructive">{errors.password}</p>
-                )}
-                {!isLogin && !errors.password && (
-                  <p className="text-xs text-muted-foreground">
-                    Password must be at least 6 characters long
-                  </p>
-                )}
-              </div>
+              )}
 
               <Button
                 type="submit"
@@ -243,31 +306,48 @@ export default function Auth() {
                 disabled={loading}
               >
                 {loading 
-                  ? (isLogin ? "Signing in..." : "Creating account...") 
-                  : (isLogin ? "Sign In" : "Sign Up")
+                  ? (isResetPassword ? "Sending reset link..." : isLogin ? "Signing in..." : "Creating account...") 
+                  : (isResetPassword ? "Send Reset Link" : isLogin ? "Sign In" : "Sign Up")
                 }
               </Button>
 
               <Separator />
 
               <div className="text-center">
-                <p className="text-sm text-muted-foreground">
-                  {isLogin ? "Don't have an account?" : "Already have an account?"}
-                </p>
-                <Button
-                  type="button"
-                  variant="link"
-                  onClick={() => {
-                    setIsLogin(!isLogin);
-                    setErrors({});
-                    setEmail("");
-                    setPassword("");
-                    setFullName("");
-                  }}
-                  className="text-primary hover:text-primary/80"
-                >
-                  {isLogin ? "Sign up here" : "Sign in here"}
-                </Button>
+                {isResetPassword ? (
+                  <Button
+                    type="button"
+                    variant="link"
+                    onClick={() => {
+                      setIsResetPassword(false);
+                      setErrors({});
+                      setEmail("");
+                    }}
+                    className="text-primary hover:text-primary/80"
+                  >
+                    Back to sign in
+                  </Button>
+                ) : (
+                  <>
+                    <p className="text-sm text-muted-foreground">
+                      {isLogin ? "Don't have an account?" : "Already have an account?"}
+                    </p>
+                    <Button
+                      type="button"
+                      variant="link"
+                      onClick={() => {
+                        setIsLogin(!isLogin);
+                        setErrors({});
+                        setEmail("");
+                        setPassword("");
+                        setFullName("");
+                      }}
+                      className="text-primary hover:text-primary/80"
+                    >
+                      {isLogin ? "Sign up here" : "Sign in here"}
+                    </Button>
+                  </>
+                )}
               </div>
             </form>
           </CardContent>
