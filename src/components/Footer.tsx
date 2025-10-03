@@ -9,10 +9,13 @@ export const Footer = () => {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <div className="h-8 w-8 bg-hero-gradient rounded-full"></div>
-              <span className="text-xl font-bold text-card-foreground">FoodieDelights</span>
+              <span className="text-xl font-bold text-card-foreground">FoodCarvan.in</span>
             </div>
+            <p className="text-sm text-muted-foreground">
+              A venture of Yuga Yatra retail OPC Pvt LTD
+            </p>
             <p className="text-muted-foreground">
-              Delivering exceptional culinary experiences to your doorstep with fresh ingredients and expert craftsmanship.
+              Bringing authentic flavors and traditional recipes to your doorstep. Experience the finest biryanis and more with every order.
             </p>
             <div className="flex space-x-4">
               <Facebook className="h-5 w-5 text-muted-foreground hover:text-primary cursor-pointer transition-colors" />
@@ -39,11 +42,11 @@ export const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground">(555) 123-FOOD</span>
+                <span className="text-muted-foreground">1800-FOODCARVAN</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4 text-primary" />
-                <span className="text-muted-foreground">hello@foodiedelights.com</span>
+                <span className="text-muted-foreground">support@foodcarvan.in</span>
               </div>
               <div className="flex items-center space-x-2">
                 <MapPin className="h-4 w-4 text-primary" />
@@ -80,7 +83,7 @@ export const Footer = () => {
 
         <div className="border-t border-border mt-8 pt-8 text-center">
           <p className="text-muted-foreground text-sm">
-            © {new Date().getFullYear()} FoodieDelights. All rights reserved. | Privacy Policy | Terms of Service
+            © {new Date().getFullYear()} FoodCarvan.in - Yuga Yatra retail OPC Pvt LTD. All rights reserved. | Privacy Policy | Terms of Service
           </p>
         </div>
       </div>

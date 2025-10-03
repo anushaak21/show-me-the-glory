@@ -27,19 +27,19 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => navigate("/")}>
             <div className="h-8 w-8 bg-hero-gradient rounded-full animate-pulse-glow"></div>
-            <span className="text-xl font-bold text-foreground">FoodieDelights</span>
+            <span className="text-xl font-bold text-foreground">FoodCarvan.in</span>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <a href="#menu" className="text-foreground hover:text-primary transition-smooth">Menu</a>
+            <span onClick={() => navigate("/menu")} className="cursor-pointer text-foreground hover:text-primary transition-smooth">Menu</span>
             <a href="#locations" className="text-foreground hover:text-primary transition-smooth">Locations</a>
             <a href="#franchise" className="text-foreground hover:text-primary transition-smooth">Franchise</a>
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Phone className="h-4 w-4" />
-              <span className="text-sm">(555) 123-FOOD</span>
+              <span className="text-sm">1800-FOODCARVAN</span>
             </div>
             
             {/* Auth & Cart Section */}
@@ -121,13 +121,15 @@ export const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 border-t border-border pt-4 space-y-4">
-            <a 
-              href="#menu" 
-              className="block text-foreground hover:text-primary transition-smooth"
-              onClick={() => setIsMenuOpen(false)}
+            <span 
+              className="block cursor-pointer text-foreground hover:text-primary transition-smooth"
+              onClick={() => {
+                navigate("/menu");
+                setIsMenuOpen(false);
+              }}
             >
               Menu
-            </a>
+            </span>
             <a 
               href="#locations" 
               className="block text-foreground hover:text-primary transition-smooth"
@@ -144,7 +146,7 @@ export const Header = () => {
             </a>
             <div className="flex items-center space-x-2 text-muted-foreground">
               <Phone className="h-4 w-4" />
-              <span className="text-sm">(555) 123-FOOD</span>
+              <span className="text-sm">1800-FOODCARVAN</span>
             </div>
             
             {/* Mobile Auth Section */}

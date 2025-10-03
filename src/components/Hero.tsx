@@ -20,14 +20,14 @@ export const Hero = () => {
         <div className="max-w-4xl space-y-8">
           {/* Main Heading */}
           <h1 className="text-5xl md:text-7xl font-bold text-primary-foreground leading-tight">
-            Delicious Food
-            <span className="block text-primary-glow animate-float">Delivered Fast</span>
+            Authentic Biryani
+            <span className="block text-primary-glow animate-float">Delivered Hot & Fresh</span>
           </h1>
 
           {/* Subtitle */}
           <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-2xl mx-auto">
-            Experience the finest culinary delights delivered straight to your doorstep. 
-            Fresh ingredients, expert chefs, lightning-fast delivery.
+            Experience the taste of tradition with FoodCarvan.in - Your journey to delicious begins here!
+            From aromatic biryanis to delightful combos, we bring authentic flavors to your doorstep.
           </p>
 
           {/* Features */}
@@ -48,11 +48,20 @@ export const Hero = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <Button variant="hero" size="lg" className="text-lg px-8 py-4">
-              Order Now
+            <Button 
+              size="lg" 
+              className="text-lg px-8 py-4 bg-primary text-primary-foreground hover:bg-primary-glow shadow-warm"
+              onClick={() => window.location.href = '/menu'}
+            >
+              Explore Menu
             </Button>
-            <Button variant="outline" size="lg" className="text-lg px-8 py-4 bg-background/10 border-primary-foreground/30 text-primary-foreground hover:bg-background/20">
-              View Menu
+            <Button 
+              variant="outline" 
+              size="lg" 
+              className="text-lg px-8 py-4 bg-background/10 border-primary-foreground/30 text-primary-foreground hover:bg-background/20"
+              onClick={() => document.getElementById('locations')?.scrollIntoView({ behavior: 'smooth' })}
+            >
+              Find Locations
             </Button>
           </div>
         </div>

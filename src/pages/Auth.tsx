@@ -187,7 +187,7 @@ export default function Auth() {
         {/* Logo */}
         <div className="flex items-center justify-center space-x-2 mb-8">
           <div className="h-10 w-10 bg-hero-gradient rounded-full animate-pulse-glow"></div>
-          <span className="text-2xl font-bold text-foreground">FoodieDelights</span>
+          <span className="text-2xl font-bold text-foreground">FoodCarvan.in</span>
         </div>
 
         <Card className="bg-card/95 backdrop-blur border-border shadow-warm">
