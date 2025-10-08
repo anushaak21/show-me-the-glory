@@ -1,51 +1,17 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Plus, Minus, Trash2, ShoppingBag } from "lucide-react";
-
-// Sample cart items - this will be connected to a cart management system later
-const sampleCartItems = [
-  {
-    id: "1",
-    name: "Gourmet Pasta Primavera",
-    price: 18.99,
-    quantity: 2,
-    image: "/src/assets/pasta-dish.jpg",
-    category: "Italian"
-  },
-  {
-    id: "2",
-    name: "Classic Gourmet Burger",
-    price: 15.99,
-    quantity: 1,
-    image: "/src/assets/burger-dish.jpg",
-    category: "American"
-  }
-];
+import { useCart } from "@/contexts/CartContext";
 
 export default function Cart() {
-  const [cartItems, setCartItems] = useState(sampleCartItems);
   const navigate = useNavigate();
-
-  const updateQuantity = (id: string, newQuantity: number) => {
-    if (newQuantity === 0) {
-      setCartItems(cartItems.filter(item => item.id !== id));
-    } else {
-      setCartItems(cartItems.map(item =>
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      ));
-    }
-  };
-
-  const removeItem = (id: string) => {
-    setCartItems(cartItems.filter(item => item.id !== id));
-  };
+  const { cartItems, updateQuantity, removeFromCart } = useCart();
 
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
   const tax = subtotal * 0.08; // 8% tax
-  const deliveryFee = 3.99;
+  const deliveryFee = subtotal > 0 ? 3.99 : 0;
   const total = subtotal + tax + deliveryFee;
 
   if (cartItems.length === 0) {
@@ -129,7 +95,7 @@ export default function Cart() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => removeItem(item.id)}
+                      onClick={() => removeFromCart(item.id)}
                       className="text-destructive hover:text-destructive"
                     >
                       <Trash2 className="h-4 w-4" />

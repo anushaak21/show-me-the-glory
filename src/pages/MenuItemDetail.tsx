@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { Minus, Plus, Leaf, Clock, Flame, ShoppingCart, ArrowLeft } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet";
+import { useCart } from "@/contexts/CartContext";
+import { toast as sonnerToast } from "sonner";
 
 interface MenuItem {
   id: string;
@@ -29,6 +31,7 @@ export default function MenuItemDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addToCart } = useCart();
   
   const [item, setItem] = useState<MenuItem | null>(null);
   const [loading, setLoading] = useState(true);
@@ -78,10 +81,25 @@ export default function MenuItemDetail() {
   };
 
   const handleAddToCart = () => {
-    toast({
-      title: "Added to Cart!",
-      description: `${quantity}x ${item?.name} added to your cart`,
+    if (!item) return;
+    
+    addToCart({
+      id: item.id + `-${selectedSpiceLevel}-${selectedAddons.join('-')}`,
+      name: item.name,
+      price: totalPrice / quantity,
+      image: item.image_url,
+      category: "Menu Item",
+      quantity,
+      customizations: {
+        spiceLevel: selectedSpiceLevel,
+        addOns: selectedAddons,
+      },
     });
+
+    sonnerToast.success("Added to Cart!", {
+      description: `${quantity}x ${item.name} added to your cart`,
+    });
+    
     navigate("/cart");
   };
 

@@ -10,6 +10,8 @@ import { Leaf, Clock, Flame, ShoppingCart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet";
+import { useCart } from "@/contexts/CartContext";
+import { toast as sonnerToast } from "sonner";
 
 interface MenuItem {
   id: string;
@@ -36,6 +38,7 @@ export default function Menu() {
   const [activeCategory, setActiveCategory] = useState<string>("");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { addToCart } = useCart();
 
   useEffect(() => {
     fetchMenuData();
@@ -88,6 +91,21 @@ export default function Menu() {
 
   const handleItemClick = (itemId: string) => {
     navigate(`/menu/${itemId}`);
+  };
+
+  const handleAddToCart = (item: MenuItem, e: React.MouseEvent) => {
+    e.stopPropagation();
+    addToCart({
+      id: item.id,
+      name: item.name,
+      price: item.base_price,
+      image: item.image_url,
+      category: categories.find(c => c.id === item.category_id)?.name || "Unknown",
+    });
+    
+    sonnerToast.success("Added to Cart!", {
+      description: `${item.name} has been added to your cart`,
+    });
   };
 
   if (loading) {
@@ -192,7 +210,11 @@ export default function Menu() {
                             </div>
                           </div>
                           
-                          <Button size="sm" className="group-hover:bg-primary-glow">
+                          <Button 
+                            size="sm" 
+                            className="group-hover:bg-primary-glow"
+                            onClick={(e) => handleAddToCart(item, e)}
+                          >
                             <ShoppingCart className="h-4 w-4 mr-1" />
                             Add
                           </Button>

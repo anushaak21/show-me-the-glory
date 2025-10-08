@@ -6,10 +6,11 @@ import { Badge } from "@/components/ui/badge";
 import { Menu, X, MapPin, Phone, ShoppingCart, User, LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useCart } from "@/contexts/CartContext";
 
 export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartItemsCount] = useState(3); // This will be connected to actual cart later
+  const { cartCount } = useCart();
   const { user, signOut } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -54,12 +55,12 @@ export const Header = () => {
                     onClick={() => navigate("/cart")}
                   >
                     <ShoppingCart className="h-5 w-5" />
-                    {cartItemsCount > 0 && (
+                    {cartCount > 0 && (
                       <Badge 
                         variant="destructive" 
                         className="absolute -top-2 -right-2 h-5 w-5 rounded-full p-0 flex items-center justify-center text-xs"
                       >
-                        {cartItemsCount}
+                        {cartCount}
                       </Badge>
                     )}
                   </Button>
@@ -161,7 +162,7 @@ export const Header = () => {
                   }}
                 >
                   <ShoppingCart className="h-4 w-4 mr-2" />
-                  Cart {cartItemsCount > 0 && `(${cartItemsCount})`}
+                  Cart {cartCount > 0 && `(${cartCount})`}
                 </Button>
                 <Button
                   variant="ghost"
