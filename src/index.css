@@ -8,47 +8,47 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 220 15% 20%;
+    --background: 210 40% 98%;
+    --foreground: 222 47% 11%;
 
     --card: 0 0% 100%;
-    --card-foreground: 220 15% 20%;
+    --card-foreground: 222 47% 11%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 220 15% 20%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 265 85% 58%;
+    --primary: 210 100% 65%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 275 90% 65%;
+    --primary-glow: 210 100% 75%;
 
-    --secondary: 265 70% 95%;
-    --secondary-foreground: 220 15% 20%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222 47% 11%;
 
     --muted: 210 40% 96%;
-    --muted-foreground: 220 10% 40%;
+    --muted-foreground: 215 16% 47%;
 
-    --accent: 320 75% 55%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 85% 60%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 30% 88%;
-    --input: 210 30% 92%;
-    --ring: 265 85% 58%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 210 100% 65%;
 
-    /* FoodCarvan.in vibrant purple brand tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(265 85% 58%), hsl(275 90% 65%));
-    --warm-gradient: linear-gradient(45deg, hsl(265 70% 97%), hsl(275 75% 96%));
-    --caravan-purple: 265 85% 58%;
-    --caravan-violet: 275 90% 65%;
-    --appetizing: 10 90% 60%;
-    --spicy: 0 85% 60%;
-    --fresh: 145 60% 45%;
+    /* FoodCarvan.in soft blue brand tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(210 100% 70%), hsl(210 100% 80%));
+    --warm-gradient: linear-gradient(45deg, hsl(210 40% 98%), hsl(210 40% 96%));
+    --caravan-blue: 210 100% 65%;
+    --caravan-light: 210 100% 75%;
+    --appetizing: 10 80% 65%;
+    --spicy: 0 75% 65%;
+    --fresh: 145 50% 50%;
     
-    /* Vibrant Shadows */
-    --shadow-warm: 0 10px 30px -5px hsl(265 85% 58% / 0.25);
-    --shadow-soft: 0 4px 20px -2px hsl(220 15% 20% / 0.1);
+    /* Soft Shadows */
+    --shadow-warm: 0 8px 24px -4px hsl(210 100% 65% / 0.15);
+    --shadow-soft: 0 2px 16px -2px hsl(222 47% 11% / 0.08);
     
     /* Animations */
     --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -74,44 +74,44 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 220 20% 10%;
-    --foreground: 0 0% 98%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
 
-    --card: 220 18% 13%;
-    --card-foreground: 0 0% 98%;
+    --card: 222 47% 14%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 220 18% 13%;
-    --popover-foreground: 0 0% 98%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 265 80% 62%;
+    --primary: 210 100% 65%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 275 85% 68%;
+    --primary-glow: 210 100% 75%;
 
-    --secondary: 220 15% 18%;
-    --secondary-foreground: 0 0% 98%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 220 15% 18%;
-    --muted-foreground: 210 10% 70%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 320 70% 60%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 217 33% 17%;
+    --accent-foreground: 210 40% 98%;
 
-    --destructive: 0 75% 58%;
+    --destructive: 0 75% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 220 15% 22%;
-    --input: 220 15% 22%;
-    --ring: 265 80% 62%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 210 100% 65%;
 
-    /* Vibrant purple dark mode tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(265 75% 55%), hsl(275 80% 60%));
-    --warm-gradient: linear-gradient(45deg, hsl(220 18% 12%), hsl(220 20% 15%));
-    --appetizing: 10 85% 58%;
-    --spicy: 0 80% 58%;
-    --fresh: 145 55% 50%;
+    /* Soft blue dark mode tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(210 90% 55%), hsl(210 100% 65%));
+    --warm-gradient: linear-gradient(45deg, hsl(222 47% 13%), hsl(222 47% 15%));
+    --appetizing: 10 75% 60%;
+    --spicy: 0 70% 60%;
+    --fresh: 145 45% 50%;
     
-    --shadow-warm: 0 10px 30px -5px hsl(265 80% 62% / 0.4);
-    --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
+    --shadow-warm: 0 8px 24px -4px hsl(210 100% 65% / 0.3);
+    --shadow-soft: 0 2px 16px -2px hsl(0 0% 0% / 0.2);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;
