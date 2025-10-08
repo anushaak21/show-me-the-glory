@@ -17,17 +17,17 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 220 15% 20%;
 
-    --primary: 175 80% 45%;
+    --primary: 265 85% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 185 85% 55%;
+    --primary-glow: 275 90% 65%;
 
-    --secondary: 175 70% 92%;
+    --secondary: 265 70% 95%;
     --secondary-foreground: 220 15% 20%;
 
     --muted: 210 40% 96%;
     --muted-foreground: 220 10% 40%;
 
-    --accent: 270 75% 60%;
+    --accent: 320 75% 55%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 85% 60%;
@@ -35,19 +35,19 @@ All colors MUST be HSL.
 
     --border: 210 30% 88%;
     --input: 210 30% 92%;
-    --ring: 175 80% 45%;
+    --ring: 265 85% 58%;
 
-    /* FoodCarvan.in vibrant teal brand tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(175 80% 45%), hsl(185 85% 55%));
-    --warm-gradient: linear-gradient(45deg, hsl(175 70% 97%), hsl(185 75% 96%));
-    --caravan-teal: 175 80% 45%;
-    --caravan-cyan: 185 85% 55%;
+    /* FoodCarvan.in vibrant purple brand tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(265 85% 58%), hsl(275 90% 65%));
+    --warm-gradient: linear-gradient(45deg, hsl(265 70% 97%), hsl(275 75% 96%));
+    --caravan-purple: 265 85% 58%;
+    --caravan-violet: 275 90% 65%;
     --appetizing: 10 90% 60%;
     --spicy: 0 85% 60%;
     --fresh: 145 60% 45%;
     
     /* Vibrant Shadows */
-    --shadow-warm: 0 10px 30px -5px hsl(175 80% 45% / 0.25);
+    --shadow-warm: 0 10px 30px -5px hsl(265 85% 58% / 0.25);
     --shadow-soft: 0 4px 20px -2px hsl(220 15% 20% / 0.1);
     
     /* Animations */
@@ -83,9 +83,9 @@ All colors MUST be HSL.
     --popover: 220 18% 13%;
     --popover-foreground: 0 0% 98%;
 
-    --primary: 175 75% 50%;
+    --primary: 265 80% 62%;
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 185 80% 60%;
+    --primary-glow: 275 85% 68%;
 
     --secondary: 220 15% 18%;
     --secondary-foreground: 0 0% 98%;
@@ -93,7 +93,7 @@ All colors MUST be HSL.
     --muted: 220 15% 18%;
     --muted-foreground: 210 10% 70%;
 
-    --accent: 270 70% 65%;
+    --accent: 320 70% 60%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 75% 58%;
@@ -101,16 +101,16 @@ All colors MUST be HSL.
 
     --border: 220 15% 22%;
     --input: 220 15% 22%;
-    --ring: 175 75% 50%;
+    --ring: 265 80% 62%;
 
-    /* Vibrant teal dark mode tokens */
-    --hero-gradient: linear-gradient(135deg, hsl(175 70% 45%), hsl(185 75% 50%));
+    /* Vibrant purple dark mode tokens */
+    --hero-gradient: linear-gradient(135deg, hsl(265 75% 55%), hsl(275 80% 60%));
     --warm-gradient: linear-gradient(45deg, hsl(220 18% 12%), hsl(220 20% 15%));
     --appetizing: 10 85% 58%;
     --spicy: 0 80% 58%;
     --fresh: 145 55% 50%;
     
-    --shadow-warm: 0 10px 30px -5px hsl(175 75% 50% / 0.4);
+    --shadow-warm: 0 10px 30px -5px hsl(265 80% 62% / 0.4);
     --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
