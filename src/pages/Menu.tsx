@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Helmet } from "react-helmet";
 import { useCart } from "@/contexts/CartContext";
 import { toast as sonnerToast } from "sonner";
+import { uploadMuttonBiryaniImage } from "@/utils/uploadMuttonBiryani";
 
 interface MenuItem {
   id: string;
@@ -42,6 +43,7 @@ export default function Menu() {
 
   useEffect(() => {
     fetchMenuData();
+    uploadMuttonBiryaniImage();
   }, []);
 
   const fetchMenuData = async () => {
